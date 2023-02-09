@@ -1,24 +1,28 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { useEffect } from 'react';
+import { RhanovServiceClient } from './Profile/ProfileServiceClientPb';
+import { BusReadRequest } from './Profile/profile_pb';
+import { Outlet } from 'react-router-dom';
+
+import ButtonAppBar from './components/navbar';
+const request = new BusReadRequest();
+export const client = new RhanovServiceClient('http://localhost:8080');
 
 function App() {
+  useEffect(() => {
+    getAll();
+    // console.log('Buses', client.doBusListRead);
+  }, []);
+  function getAll() {
+    client.doBusListRead(request, null, (err, ress) => {
+      console.log('Results', ress);
+    });
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      <ButtonAppBar />
+      <Outlet />
     </div>
   );
 }
